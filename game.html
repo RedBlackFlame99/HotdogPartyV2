@@ -30,39 +30,143 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, #1a0f35 50%, var(--secondary) 100%);
             color: var(--text);
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Container */
-        .game-container {
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            flex-direction: column;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a0f35 50%, var(--secondary) 100%);
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
         }
 
-        /* Header/Controls */
-        .game-header {
-            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(26, 31, 58, 0.95));
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(80px);
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.15) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+            bottom: -50px;
+            left: 5%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+            top: 50%;
+            right: 5%;
+            animation: float 9s ease-in-out infinite;
+        }
+
+        .floating-square {
+            position: fixed;
+            background: linear-gradient(135deg, rgba(139, 90, 43, 0.25), rgba(168, 85, 247, 0.15));
+            pointer-events: none;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 140, 0, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 1;
+        }
+
+        .square-1 {
+            width: 80px;
+            height: 80px;
+            animation: float-square 6s ease-in-out infinite, rotate 8s linear infinite;
+        }
+
+        .square-2 {
+            width: 100px;
+            height: 100px;
+            animation: float-square 7s ease-in-out infinite reverse, rotate 10s linear infinite reverse;
+        }
+
+        .square-3 {
+            width: 70px;
+            height: 70px;
+            animation: float-square 8s ease-in-out infinite, rotate 12s linear infinite;
+        }
+
+        .square-4 {
+            width: 90px;
+            height: 90px;
+            animation: float-square 7.5s ease-in-out infinite reverse, rotate 9s linear infinite reverse;
+        }
+
+        .square-5 {
+            width: 85px;
+            height: 85px;
+            animation: float-square 6.5s ease-in-out infinite, rotate 11s linear infinite;
+        }
+
+        .square-6 {
+            width: 75px;
+            height: 75px;
+            animation: float-square 7s ease-in-out infinite, rotate 8.5s linear infinite reverse;
+        }
+
+        /* Main Container */
+        .game-wrapper {
+            display: flex;
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1600px;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Game Box */
+        .game-box-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(10, 14, 39, 0.95));
+            border: 2px solid rgba(255, 140, 0, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(20px);
-            padding: 1rem 2rem;
+        }
+
+        /* Game Header */
+        .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1.5rem;
             border-bottom: 1px solid rgba(255, 140, 0, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            z-index: 100;
+            gap: 1rem;
         }
 
-        .game-title {
-            font-family: 'Luckiest Guy', cursive;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, var(--accent) 0%, #ffb366 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .game-header-left {
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -72,7 +176,7 @@
             background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 140, 0, 0.05));
             color: var(--text-dim);
             border: 1.5px solid rgba(255, 140, 0, 0.3);
-            padding: 0.6rem 1.2rem;
+            padding: 0.6rem 1rem;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 700;
@@ -93,9 +197,25 @@
             box-shadow: 0 8px 20px rgba(255, 140, 0, 0.2);
         }
 
-        .controls {
+        .game-title {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #ffb366 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: flex;
+            align-items: center;
             gap: 0.8rem;
+        }
+
+        .game-title-icon {
+            font-size: 1.5rem;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 0.6rem;
             align-items: center;
         }
 
@@ -103,7 +223,7 @@
             background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 140, 0, 0.05));
             color: var(--text-dim);
             border: 1.5px solid rgba(255, 140, 0, 0.3);
-            padding: 0.6rem 1.2rem;
+            padding: 0.5rem 0.8rem;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 700;
@@ -111,7 +231,7 @@
             font-size: 0.85rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.3rem;
             backdrop-filter: blur(10px);
         }
 
@@ -127,7 +247,7 @@
             transform: translateY(0);
         }
 
-        /* Game Iframe Container */
+        /* Game Content */
         .game-content {
             flex: 1;
             position: relative;
@@ -141,23 +261,84 @@
             display: block;
         }
 
-        #gameFrame:fullscreen {
+        /* Quick Play Sidebar */
+        .quick-play-sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(10, 14, 39, 0.95));
+            border: 2px solid rgba(255, 140, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .quick-play-title {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quick-play-games {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quick-game-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.8rem;
+            border-radius: 10px;
+            background: rgba(255, 140, 0, 0.05);
+            border: 1px solid rgba(255, 140, 0, 0.1);
+        }
+
+        .quick-game-item:hover {
+            background: rgba(255, 140, 0, 0.1);
+            border-color: rgba(255, 140, 0, 0.3);
+            transform: translateX(5px);
+        }
+
+        .quick-game-icon {
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(168, 85, 247, 0.1));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            overflow: hidden;
+        }
+
+        .quick-game-icon img {
             width: 100%;
             height: 100%;
+            object-fit: cover;
         }
 
-        /* Fullscreen Styles */
-        .game-content:fullscreen {
-            width: 100vw;
-            height: 100vh;
+        .quick-game-name {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 0.9rem;
+            color: var(--accent);
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        #gameFrame:-webkit-full-screen {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Loading State */
+        /* Loading & Error Overlays */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -195,16 +376,6 @@
             letter-spacing: 1px;
         }
 
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Error State */
         .error-overlay {
             position: absolute;
             top: 0;
@@ -212,7 +383,7 @@
             width: 100%;
             height: 100%;
             background: rgba(10, 14, 39, 0.9);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 50;
@@ -237,111 +408,171 @@
             font-size: 1rem;
         }
 
-        .error-overlay .back-btn {
-            margin-top: 1rem;
+        /* Animations */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(40px);
+            }
         }
 
-        /* Tooltip */
-        .tooltip {
-            position: relative;
+        @keyframes float-square {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(50px);
+            }
         }
 
-        .tooltip::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: var(--accent);
-            padding: 0.5rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-            border: 1px solid rgba(255, 140, 0, 0.3);
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .tooltip:hover::after {
-            opacity: 1;
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Scrollbar */
+        .quick-play-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .quick-play-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 140, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .quick-play-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 140, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .quick-play-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 140, 0, 0.5);
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .game-header {
-                padding: 0.8rem 1rem;
-                flex-wrap: wrap;
+        @media (max-width: 1200px) {
+            .game-wrapper {
+                flex-direction: column;
                 gap: 1rem;
             }
 
-            .game-title {
-                font-size: 1.2rem;
-                order: 1;
+            .quick-play-sidebar {
                 width: 100%;
+                height: auto;
+                max-height: 200px;
             }
 
-            .controls {
-                order: 3;
-                width: 100%;
+            .quick-play-games {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .quick-game-item {
+                min-width: 120px;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-wrapper {
+                padding: 1rem;
+                gap: 0.8rem;
+            }
+
+            .game-header {
+                padding: 1rem;
                 flex-wrap: wrap;
             }
 
-            .control-btn {
-                flex: 1;
-                min-width: calc(50% - 0.4rem);
-                font-size: 0.75rem;
-                padding: 0.5rem 0.8rem;
+            .game-title {
+                font-size: 1.1rem;
             }
 
-            .back-btn {
-                order: 2;
+            .control-btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .quick-play-sidebar {
+                padding: 1rem;
+            }
+
+            .quick-play-title {
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- Header with Controls -->
-        <div class="game-header">
-            <div class="game-title">
-                <span id="gameTitle">Loading Game...</span>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Floating Squares Container -->
+    <div id="squares-container"></div>
+
+    <!-- Main Wrapper -->
+    <div class="game-wrapper">
+        <!-- Game Box -->
+        <div class="game-box-container">
+            <!-- Header -->
+            <div class="game-header">
+                <div class="game-header-left">
+                    <a href="games.html" class="back-btn">← Back</a>
+                    <div class="game-title">
+                        <span class="game-title-icon">🎮</span>
+                        <span id="gameTitle">Loading...</span>
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <button class="control-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+                    <button class="control-btn" id="reloadBtn" title="Reload">🔄</button>
+                    <button class="control-btn" id="soundBtn" title="Sound">🔊</button>
+                </div>
             </div>
-            
-            <div class="controls">
-                <button class="control-btn tooltip" id="fullscreenBtn" data-tooltip="Fullscreen">
-                    ⛶
-                </button>
-                <button class="control-btn tooltip" id="reloadBtn" data-tooltip="Reload Game">
-                    🔄
-                </button>
-                <button class="control-btn tooltip" id="pauseBtn" data-tooltip="Pause/Resume" style="display:none;">
-                    ⏸
-                </button>
-                <button class="control-btn tooltip" id="soundBtn" data-tooltip="Toggle Sound">
-                    🔊
-                </button>
-                <a href="games.html" class="back-btn">← Back</a>
+
+            <!-- Game Content -->
+            <div class="game-content">
+                <iframe id="gameFrame" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-popups allow-forms"></iframe>
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <div class="loading-text">LOADING GAME</div>
+                    </div>
+                </div>
+                <div class="error-overlay" id="errorOverlay">
+                    <div class="error-message">
+                        <h2>⚠ Error Loading Game</h2>
+                        <p>The game could not be loaded. Please try again.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Game Content -->
-        <div class="game-content">
-            <iframe id="gameFrame" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-popups allow-forms"></iframe>
-            <div class="loading-overlay" id="loadingOverlay">
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
-                    <div class="loading-text">LOADING GAME</div>
-                </div>
-            </div>
-            <div class="error-overlay" id="errorOverlay" style="display: none;">
-                <div class="error-message">
-                    <h2>⚠ Error Loading Game</h2>
-                    <p>The game could not be loaded. Please try again or go back.</p>
-                </div>
-                <a href="games.html" class="back-btn">← Back to Games</a>
+        <!-- Quick Play Sidebar -->
+        <div class="quick-play-sidebar">
+            <div class="quick-play-title">⚡ QUICK PLAY</div>
+            <div class="quick-play-games" id="quickPlayContainer">
+                <!-- Games will be loaded here -->
             </div>
         </div>
     </div>
@@ -354,9 +585,11 @@
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const reloadBtn = document.getElementById('reloadBtn');
         const soundBtn = document.getElementById('soundBtn');
-        const gameContent = document.querySelector('.game-content');
+        const gameBoxContainer = document.querySelector('.game-box-container');
+        const quickPlayContainer = document.getElementById('quickPlayContainer');
 
         let isMuted = false;
+        let allGames = [];
 
         // Get game path from URL parameter
         function getGamePath() {
@@ -364,22 +597,68 @@
             return params.get('game');
         }
 
+        function getGameName() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('name') || 'Game';
+        }
+
         // Initialize game
-        function initGame() {
+        async function initGame() {
             const gamePath = getGamePath();
+            const gameName = getGameName();
             
             if (!gamePath) {
                 showError('No game specified');
                 return;
             }
 
-            // Set title
-            const gameName = gamePath.split('/').slice(-2, -1)[0];
-            gameTitle.textContent = gameName.toUpperCase();
+            gameTitle.textContent = gameName;
             document.title = `${gameName} - Hotdog Party`;
+
+            // Load games for quick play
+            await loadQuickPlayGames();
 
             // Load game
             gameFrame.src = gamePath;
+        }
+
+        // Load games for quick play sidebar
+        async function loadQuickPlayGames() {
+            try {
+                const response = await fetch('games.json');
+                allGames = await response.json();
+                renderQuickPlayGames();
+            } catch (error) {
+                console.error('Error loading games:', error);
+            }
+        }
+
+        // Render quick play games
+        function renderQuickPlayGames() {
+            quickPlayContainer.innerHTML = '';
+            
+            allGames.slice(0, 5).forEach(game => {
+                const gameItem = document.createElement('div');
+                gameItem.className = 'quick-game-item';
+                gameItem.style.cursor = 'pointer';
+
+                const iconHTML = `
+                    <div class="quick-game-icon">
+                        <img src="${game.icon}" alt="${game.name}" onerror="this.parentElement.innerHTML='🎮'" loading="lazy">
+                    </div>
+                `;
+
+                gameItem.innerHTML = `
+                    ${iconHTML}
+                    <div class="quick-game-name">${game.name}</div>
+                `;
+
+                gameItem.addEventListener('click', () => {
+                    window.location.href = `game.html?game=${encodeURIComponent(game.path)}&name=${encodeURIComponent(game.name)}`;
+                });
+
+                quickPlayContainer.appendChild(gameItem);
+            });
         }
 
         // Hide loading overlay
@@ -408,7 +687,7 @@
         // Fullscreen button
         fullscreenBtn.addEventListener('click', () => {
             if (!document.fullscreenElement) {
-                gameContent.requestFullscreen().catch(err => {
+                gameBoxContainer.requestFullscreen().catch(err => {
                     console.error(`Error attempting to enable fullscreen: ${err.message}`);
                 });
             } else {
@@ -427,29 +706,63 @@
         soundBtn.addEventListener('click', () => {
             isMuted = !isMuted;
             soundBtn.style.opacity = isMuted ? '0.5' : '1';
-            try {
-                gameFrame.contentWindow.postMessage(
-                    { action: 'toggleMute', muted: isMuted },
-                    '*'
-                );
-            } catch (e) {
-                console.log('Cannot control game audio');
-            }
         });
 
         // Handle fullscreen changes
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
                 fullscreenBtn.style.opacity = '1';
-                fullscreenBtn.textContent = '⛶ ✓';
             } else {
                 fullscreenBtn.style.opacity = '0.8';
-                fullscreenBtn.textContent = '⛶';
             }
         });
 
+        // Floating squares setup
+        const squareSizes = [80, 100, 70, 90, 85, 75];
+        const animationDurations = [
+            { float: '6s', rotate: '8s', direction: 'normal' },
+            { float: '7s', rotate: '10s', direction: 'reverse' },
+            { float: '8s', rotate: '12s', direction: 'normal' },
+            { float: '7.5s', rotate: '9s', direction: 'reverse' },
+            { float: '6.5s', rotate: '11s', direction: 'normal' },
+            { float: '7s', rotate: '8.5s', direction: 'reverse' }
+        ];
+
+        function getRandomPosition() {
+            const randomTop = Math.random() * 100;
+            const randomLeft = Math.random() * 100;
+            return { top: randomTop, left: randomLeft };
+        }
+
+        function createFloatingSquares() {
+            const container = document.getElementById('squares-container');
+            
+            squareSizes.forEach((size, index) => {
+                const square = document.createElement('div');
+                square.className = `floating-square square-${index + 1}`;
+                
+                const { top, left } = getRandomPosition();
+                const duration = animationDurations[index];
+                
+                square.style.top = `${top}%`;
+                square.style.left = `${left}%`;
+                square.style.width = `${size}px`;
+                square.style.height = `${size}px`;
+                
+                const floatDir = duration.direction === 'reverse' ? 'infinite reverse' : 'infinite';
+                const rotateDir = duration.direction === 'reverse' ? 'infinite reverse' : 'infinite';
+                
+                square.style.animation = `float-square ${duration.float} ease-in-out ${floatDir}, rotate ${duration.rotate} linear ${rotateDir}`;
+                
+                container.appendChild(square);
+            });
+        }
+
         // Initialize on load
-        window.addEventListener('DOMContentLoaded', initGame);
+        window.addEventListener('DOMContentLoaded', () => {
+            createFloatingSquares();
+            initGame();
+        });
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
