@@ -195,6 +195,25 @@
             object-fit: contain;
         }
 
+        .icon-not-found {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            border-radius: 8px;
+            margin: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 0.85rem;
+            color: #ef4444;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
         .game-name-overlay {
             position: absolute;
             bottom: 0;
@@ -295,6 +314,10 @@
             .game-name {
                 font-size: 0.85rem;
             }
+
+            .icon-not-found {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
@@ -341,7 +364,7 @@
 
                 const iconHTML = `
                     <div class="game-icon">
-                        <img src="${game.icon}" alt="${game.name}" onerror="this.innerHTML='🎮'">
+                        <img src="${game.icon}" alt="${game.name}" onerror="this.parentElement.innerHTML='<div class=\"icon-not-found\">ICON NOT FOUND</div>'">
                     </div>
                 `;
 
