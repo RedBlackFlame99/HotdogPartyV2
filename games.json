@@ -8,43 +8,27 @@
     "release": "4/8/2026"
   },
   {
-    "name": "Battle Arena",
-    "path": "games/battle/index.html",
-    "icon": "games/battle/icon.png",
-    "tags": ["multiplayer", "action"],
-    "developer": "Game Studio",
-    "release": "01-15-2024"
+    "name": "Drive Mad",
+    "path": "games/drive-mad/index.html",
+    "icon": "games/drive-mad/icon.png",
+    "tags": [],
+    "developer": "Martin Magni",
+    "release": "4/8/2026"
   },
   {
-    "name": "Puzzle Master",
-    "path": "games/puzzle/index.html",
-    "icon": "games/puzzle/icon.png",
-    "tags": ["puzzle", "casual"],
-    "developer": "Indie Dev",
-    "release": "02-20-2024"
+    "name": "Brotato",
+    "path": "games/brotato/index.html",
+    "icon": "games/brotato/icon.png",
+    "tags": [],
+    "developer": "Thomas Gervraud",
+    "release": "4/8/2026"
   },
   {
-    "name": "Space Quest",
-    "path": "games/space/index.html",
-    "icon": "games/space/icon.png",
-    "tags": ["adventure", "sci-fi"],
-    "developer": "Creative Games",
-    "release": "03-10-2024"
-  },
-  {
-    "name": "Racing Rush",
-    "path": "games/racing/index.html",
-    "icon": "games/racing/icon.png",
-    "tags": ["racing", "competitive"],
-    "developer": "Speed Dev",
-    "release": "04-05-2024"
-  },
-  {
-    "name": "Mystery Manor",
-    "path": "games/mystery/index.html",
-    "icon": "games/mystery/icon.png",
-    "tags": ["mystery", "thriller"],
-    "developer": "Story Games",
-    "release": "05-12-2024"
+    "name": "Granny",
+    "path": "games/granny/index.html",
+    "icon": "games/granny/icon.png",
+    "tags": [],
+    "developer": "Dennis Vukanovic",
+    "release": "4/8/2026"
   }
 ]
