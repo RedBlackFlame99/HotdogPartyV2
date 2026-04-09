@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Player - Hotdog Party</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #ff8c00;
+            --accent-dark: #e67e00;
+            --text: #ffffff;
+            --text-dim: #a0a8c0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        /* Container */
+        .game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header/Controls */
+        .game-header {
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(26, 31, 58, 0.95));
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 140, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+
+        .game-title {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #ffb366 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 140, 0, 0.05));
+            color: var(--text-dim);
+            border: 1.5px solid rgba(255, 140, 0, 0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 140, 0, 0.1));
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.2);
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 140, 0, 0.05));
+            color: var(--text-dim);
+            border: 1.5px solid rgba(255, 140, 0, 0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 140, 0, 0.1));
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.2);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Game Iframe Container */
+        .game-content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #gameFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        #gameFrame:fullscreen {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Fullscreen Styles */
+        .game-content:fullscreen {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #gameFrame:-webkit-full-screen {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 39, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 140, 0, 0.2);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            font-family: 'Luckiest Guy', cursive;
+            color: var(--accent);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Error State */
+        .error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 39, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .error-message {
+            text-align: center;
+        }
+
+        .error-message h2 {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 1.8rem;
+            color: #ef4444;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .error-overlay .back-btn {
+            margin-top: 1rem;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--accent);
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-header {
+                padding: 0.8rem 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .game-title {
+                font-size: 1.2rem;
+                order: 1;
+                width: 100%;
+            }
+
+            .controls {
+                order: 3;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .control-btn {
+                flex: 1;
+                min-width: calc(50% - 0.4rem);
+                font-size: 0.75rem;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .back-btn {
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header with Controls -->
+        <div class="game-header">
+            <div class="game-title">
+                <span id="gameTitle">Loading Game...</span>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn tooltip" id="fullscreenBtn" data-tooltip="Fullscreen">
+                    ⛶
+                </button>
+                <button class="control-btn tooltip" id="reloadBtn" data-tooltip="Reload Game">
+                    🔄
+                </button>
+                <button class="control-btn tooltip" id="pauseBtn" data-tooltip="Pause/Resume" style="display:none;">
+                    ⏸
+                </button>
+                <button class="control-btn tooltip" id="soundBtn" data-tooltip="Toggle Sound">
+                    🔊
+                </button>
+                <a href="games.html" class="back-btn">← Back</a>
+            </div>
+        </div>
+
+        <!-- Game Content -->
+        <div class="game-content">
+            <iframe id="gameFrame" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-popups allow-forms"></iframe>
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <div class="loading-text">LOADING GAME</div>
+                </div>
+            </div>
+            <div class="error-overlay" id="errorOverlay" style="display: none;">
+                <div class="error-message">
+                    <h2>⚠ Error Loading Game</h2>
+                    <p>The game could not be loaded. Please try again or go back.</p>
+                </div>
+                <a href="games.html" class="back-btn">← Back to Games</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameFrame = document.getElementById('gameFrame');
+        const gameTitle = document.getElementById('gameTitle');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const errorOverlay = document.getElementById('errorOverlay');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const reloadBtn = document.getElementById('reloadBtn');
+        const soundBtn = document.getElementById('soundBtn');
+        const gameContent = document.querySelector('.game-content');
+
+        let isMuted = false;
+
+        // Get game path from URL parameter
+        function getGamePath() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('game');
+        }
+
+        // Initialize game
+        function initGame() {
+            const gamePath = getGamePath();
+            
+            if (!gamePath) {
+                showError('No game specified');
+                return;
+            }
+
+            // Set title
+            const gameName = gamePath.split('/').slice(-2, -1)[0];
+            gameTitle.textContent = gameName.toUpperCase();
+            document.title = `${gameName} - Hotdog Party`;
+
+            // Load game
+            gameFrame.src = gamePath;
+        }
+
+        // Hide loading overlay
+        gameFrame.addEventListener('load', () => {
+            loadingOverlay.style.display = 'none';
+        });
+
+        // Show error if frame fails to load
+        gameFrame.addEventListener('error', () => {
+            showError('Failed to load the game');
+        });
+
+        // Handle timeout
+        setTimeout(() => {
+            if (loadingOverlay.style.display !== 'none') {
+                showError('Game took too long to load');
+            }
+        }, 10000);
+
+        function showError(message) {
+            loadingOverlay.style.display = 'none';
+            errorOverlay.style.display = 'flex';
+            errorOverlay.querySelector('p').textContent = message;
+        }
+
+        // Fullscreen button
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                gameContent.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Reload button
+        reloadBtn.addEventListener('click', () => {
+            loadingOverlay.style.display = 'flex';
+            errorOverlay.style.display = 'none';
+            gameFrame.src = gameFrame.src;
+        });
+
+        // Sound button
+        soundBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            soundBtn.style.opacity = isMuted ? '0.5' : '1';
+            try {
+                gameFrame.contentWindow.postMessage(
+                    { action: 'toggleMute', muted: isMuted },
+                    '*'
+                );
+            } catch (e) {
+                console.log('Cannot control game audio');
+            }
+        });
+
+        // Handle fullscreen changes
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fullscreenBtn.style.opacity = '1';
+                fullscreenBtn.textContent = '⛶ ✓';
+            } else {
+                fullscreenBtn.style.opacity = '0.8';
+                fullscreenBtn.textContent = '⛶';
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initGame);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                fullscreenBtn.click();
+            } else if (e.key === 'r' || e.key === 'R') {
+                reloadBtn.click();
+            } else if (e.key === 'm' || e.key === 'M') {
+                soundBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

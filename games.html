@@ -357,10 +357,11 @@
             container.innerHTML = '';
 
             games.forEach(game => {
-                const card = document.createElement('a');
-                card.href = game.path;
+                const card = document.createElement('div');
                 card.className = 'game-card';
-                card.target = '_blank';
+                
+                // Create the game URL with encoded path
+                const gameUrl = `game.html?game=${encodeURIComponent(game.path)}&name=${encodeURIComponent(game.name)}`;
 
                 const iconHTML = `
                     <div class="game-icon">
@@ -375,6 +376,20 @@
                     </div>
                 `;
 
+                // Add click handler to navigate to game.html
+                card.addEventListener('click', () => {
+                    window.location.href = gameUrl;
+                });
+
+                // Add keyboard support
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        window.location.href = gameUrl;
+                    }
+                });
+
+                card.style.cursor = 'pointer';
+                card.setAttribute('tabindex', '0');
                 container.appendChild(card);
             });
         }
