@@ -173,42 +173,23 @@
 
         .game-icon {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: grid;
-            place-items: center;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 2;
-            transition: transform 0.3s ease;
+            overflow: hidden;
         }
 
-        .game-card:hover .game-icon {
+        .game-card:hover .game-icon img {
             transform: scale(1.05);
         }
 
         .game-icon img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .icon-not-found {
-            display: grid;
-            place-items: center;
-            width: 100%;
-            height: 100%;
-            background: rgba(239, 68, 68, 0.15);
-            border: 2px solid rgba(239, 68, 68, 0.4);
-            border-radius: 8px;
-            text-align: center;
-            font-family: 'Luckiest Guy', cursive;
-            font-size: 0.85rem;
-            color: #ef4444;
-            font-weight: bold;
-            letter-spacing: 1px;
-            padding: 1rem;
+            object-fit: contain;
+            transition: transform 0.3s ease;
         }
 
         .game-name-overlay {
@@ -307,10 +288,6 @@
             .game-name {
                 font-size: 0.85rem;
             }
-
-            .icon-not-found {
-                font-size: 0.65rem;
-            }
         }
     </style>
 </head>
@@ -358,7 +335,7 @@
 
                 const iconHTML = `
                     <div class="game-icon">
-                        <img src="${game.icon}" alt="${game.name}" onerror="this.parentElement.innerHTML='<div class=\"icon-not-found\">ICON NOT FOUND</div>'">
+                        <img src="${game.icon}" alt="${game.name}">
                     </div>
                 `;
 
