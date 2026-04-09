@@ -140,7 +140,7 @@
 
         .games-carousel {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 2rem;
             padding: 1rem 0;
             max-width: 1400px;
@@ -149,18 +149,20 @@
         }
 
         .game-card {
+            aspect-ratio: 1;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
-            display: flex;
-            flex-direction: column;
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
             text-decoration: none;
             color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
         }
 
         .game-card::before {
@@ -169,55 +171,62 @@
             inset: 0;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
             pointer-events: none;
+            z-index: 1;
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .game-icon img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .game-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 3;
+            backdrop-filter: blur(5px);
+        }
+
+        .game-card:hover .game-overlay {
+            opacity: 1;
         }
 
         .game-card:hover {
             transform: translateY(-8px);
             border-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 15px 50px rgba(255, 140, 0, 0.3);
-            background: linear-gradient(135deg, rgba(255, 140, 0, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
         }
 
-        .game-image {
-            width: 100%;
-            height: 150px;
-            background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 140, 0, 0.1));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .game-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .game-image-fallback {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
-        }
-
-        .game-info {
-            padding: 1.2rem;
-            flex: 1;
+        .overlay-content {
             display: flex;
             flex-direction: column;
-            position: relative;
-            z-index: 2;
+            gap: 0.8rem;
+            width: 100%;
         }
 
         .game-name {
             font-family: 'Luckiest Guy', cursive;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--accent);
-            margin-bottom: 0.5rem;
             line-height: 1.2;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -227,32 +236,30 @@
 
         .game-developer {
             color: var(--text-dim);
-            font-size: 0.75rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.7rem;
         }
 
         .game-release {
             color: var(--text-dim);
-            font-size: 0.75rem;
-            margin-bottom: 0.8rem;
+            font-size: 0.7rem;
         }
 
         .game-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.4rem;
-            margin-top: auto;
+            gap: 0.3rem;
+            justify-content: center;
         }
 
         .game-tag {
             display: inline-block;
-            background: rgba(255, 140, 0, 0.15);
+            background: rgba(255, 140, 0, 0.3);
             color: var(--accent);
-            padding: 0.25rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.6rem;
             text-transform: capitalize;
-            border: 1px solid rgba(255, 140, 0, 0.3);
+            border: 1px solid rgba(255, 140, 0, 0.5);
         }
 
         .loading {
@@ -310,12 +317,12 @@
                 gap: 1.2rem;
             }
 
-            .game-card {
-                padding: 0;
+            .game-icon {
+                font-size: 2.5rem;
             }
 
             .game-name {
-                font-size: 0.95rem;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -361,21 +368,23 @@
                 card.className = 'game-card';
                 card.target = '_blank';
 
-                const imageHTML = `
-                    <div class="game-image">
-                        <img src="${game.icon}" alt="${game.name}" onerror="this.parentElement.innerHTML='<div class=\"game-image-fallback\">🎮</div>'">
+                const iconHTML = `
+                    <div class="game-icon">
+                        <img src="${game.icon}" alt="${game.name}" onerror="this.innerHTML='🎮'">
                     </div>
                 `;
 
                 const tagsHTML = game.tags.map(tag => `<span class="game-tag">${tag}</span>`).join('');
 
                 card.innerHTML = `
-                    ${imageHTML}
-                    <div class="game-info">
-                        <div class="game-name">${game.name}</div>
-                        <div class="game-developer">by ${game.developer}</div>
-                        <div class="game-release">${game.release}</div>
-                        <div class="game-tags">${tagsHTML}</div>
+                    ${iconHTML}
+                    <div class="game-overlay">
+                        <div class="overlay-content">
+                            <div class="game-name">${game.name}</div>
+                            <div class="game-developer">by ${game.developer}</div>
+                            <div class="game-release">${game.release}</div>
+                            <div class="game-tags">${tagsHTML}</div>
+                        </div>
                     </div>
                 `;
 
