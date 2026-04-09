@@ -38,6 +38,10 @@
             justify-content: center;
         }
 
+        body.fullscreen-mode {
+            background: var(--primary);
+        }
+
         /* Animated Background */
         .background-animation {
             position: fixed;
@@ -49,6 +53,10 @@
             z-index: -1;
             overflow: hidden;
             pointer-events: none;
+        }
+
+        body.fullscreen-mode .background-animation {
+            background: var(--primary);
         }
 
         .gradient-orb {
@@ -143,6 +151,12 @@
             z-index: 10;
         }
 
+        body.fullscreen-mode .game-wrapper {
+            gap: 0;
+            padding: 0;
+            max-width: 100%;
+        }
+
         /* Game Box */
         .game-box-container {
             flex: 1;
@@ -156,6 +170,14 @@
             backdrop-filter: blur(20px);
         }
 
+        body.fullscreen-mode .game-box-container {
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            background: var(--primary);
+            backdrop-filter: none;
+        }
+
         /* Game Header */
         .game-header {
             display: flex;
@@ -164,6 +186,10 @@
             padding: 1.5rem;
             border-bottom: 1px solid rgba(255, 140, 0, 0.1);
             gap: 1rem;
+        }
+
+        body.fullscreen-mode .game-header {
+            display: none;
         }
 
         .game-header-left {
@@ -271,6 +297,10 @@
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(20px);
+        }
+
+        body.fullscreen-mode .quick-play-sidebar {
+            display: none;
         }
 
         .quick-play-title {
@@ -546,7 +576,6 @@
                 <div class="game-controls">
                     <button class="control-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
                     <button class="control-btn" id="reloadBtn" title="Reload">🔄</button>
-                    <button class="control-btn" id="soundBtn" title="Sound">🔊</button>
                 </div>
             </div>
 
@@ -584,12 +613,12 @@
         const errorOverlay = document.getElementById('errorOverlay');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const reloadBtn = document.getElementById('reloadBtn');
-        const soundBtn = document.getElementById('soundBtn');
         const gameBoxContainer = document.querySelector('.game-box-container');
+        const gameWrapper = document.querySelector('.game-wrapper');
         const quickPlayContainer = document.getElementById('quickPlayContainer');
 
-        let isMuted = false;
         let allGames = [];
+        let isFullscreen = false;
 
         // Get game path from URL parameter
         function getGamePath() {
@@ -684,14 +713,27 @@
             errorOverlay.querySelector('p').textContent = message;
         }
 
-        // Fullscreen button
+        // Fullscreen button - fullscreen the entire game frame
         fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                gameBoxContainer.requestFullscreen().catch(err => {
+            if (!isFullscreen) {
+                gameFrame.requestFullscreen().catch(err => {
                     console.error(`Error attempting to enable fullscreen: ${err.message}`);
                 });
             } else {
                 document.exitFullscreen();
+            }
+        });
+
+        // Handle fullscreen changes
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                isFullscreen = true;
+                document.body.classList.add('fullscreen-mode');
+                fullscreenBtn.textContent = '⛶ ✓';
+            } else {
+                isFullscreen = false;
+                document.body.classList.remove('fullscreen-mode');
+                fullscreenBtn.textContent = '⛶';
             }
         });
 
@@ -700,21 +742,6 @@
             loadingOverlay.style.display = 'flex';
             errorOverlay.style.display = 'none';
             gameFrame.src = gameFrame.src;
-        });
-
-        // Sound button
-        soundBtn.addEventListener('click', () => {
-            isMuted = !isMuted;
-            soundBtn.style.opacity = isMuted ? '0.5' : '1';
-        });
-
-        // Handle fullscreen changes
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                fullscreenBtn.style.opacity = '1';
-            } else {
-                fullscreenBtn.style.opacity = '0.8';
-            }
         });
 
         // Floating squares setup
@@ -770,8 +797,6 @@
                 fullscreenBtn.click();
             } else if (e.key === 'r' || e.key === 'R') {
                 reloadBtn.click();
-            } else if (e.key === 'm' || e.key === 'M') {
-                soundBtn.click();
             }
         });
     </script>
