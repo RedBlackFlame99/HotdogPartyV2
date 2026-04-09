@@ -1,11 +1,11 @@
 [
   {
-    "name": "This is a Game Name",
-    "path": "games/test/index.html",
-    "icon": "games/test/icon.png",
-    "tags": ["multiplayer", "some other random tag"],
-    "developer": "Some Dev",
-    "release": "Some Date MM-DD-YYYY"
+    "name": "Bad Bodyguards",
+    "path": "games/bad-bodyguards/index.html",
+    "icon": "games/bad-bodyguards/icon.png",
+    "tags": [],
+    "developer": "kindanice",
+    "release": "4/8/2026"
   },
   {
     "name": "Battle Arena",
