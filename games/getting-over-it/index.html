@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Library</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #1f1f1f;
+      position: sticky;
+      top: 0;
+    }
+
+    input {
+      width: 60%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .game {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 2px solid #a855f7;
+      box-sizing: border-box;
+    }
+
+    .game:hover {
+      transform: scale(1.05);
+    }
+
+    .game img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .game::after {
+      content: attr(data-name);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      text-align: center;
+      background: rgba(0,0,0,0.55);
+      opacity: 0;
+      transition: 0.2s;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+
+    .game:hover::after {
+      opacity: 1;
+    }
+
+    .menu {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+      min-width: 200px;
+      z-index: 1000;
+    }
+
+    .menu button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #333;
+      color: white;
+    }
+
+    .menu button:hover {
+      background: #444;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <input type="text" id="search" placeholder="Search games..." onkeyup="filterGames()" />
+</header>
+
+<div class="container" id="gameList"></div>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="menu" id="menu"></div>
+
+<script>
+let games = [];
+
+async function loadGames() {
+  try {
+    const res = await fetch('games.json');
+    games = await res.json();
+    renderGames(games);
+  } catch (err) {
+    console.error('Failed to load games.json', err);
+  }
+}
+
+function renderGames(list) {
+  const container = document.getElementById('gameList');
+  container.innerHTML = '';
+
+  list.forEach(game => {
+    const div = document.createElement('div');
+    div.className = 'game';
+    div.setAttribute('data-name', game.name);
+
+    div.innerHTML = `<img src="${game.icon}" alt="${game.name}" />`;
+
+    div.onclick = () => openGame(game);
+
+    container.appendChild(div);
+  });
+}
+
+function openGame(game) {
+  if (!game.paths || game.paths.length === 0) return;
+
+  if (game.paths.length === 1) {
+    window.location.href = game.paths[0].path;
+    return;
+  }
+
+  openMenu(game);
+}
+
+function openMenu(game) {
+  const menu = document.getElementById('menu');
+  const overlay = document.getElementById('overlay');
+
+  menu.innerHTML = `<h3>${game.name}</h3>`;
+
+  game.paths.forEach(p => {
+    const btn = document.createElement('button');
+    btn.innerText = p.name;
+    btn.onclick = () => window.location.href = p.path;
+    menu.appendChild(btn);
+  });
+
+  overlay.style.display = 'block';
+  menu.style.display = 'block';
+}
+
+function closeMenu() {
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('menu').style.display = 'none';
+}
+
+function filterGames() {
+  const input = document.getElementById('search').value.toLowerCase();
+  const filtered = games.filter(g => g.name.toLowerCase().includes(input));
+  renderGames(filtered);
+}
+
+loadGames();
+</script>
+
+</body>
+</html>
