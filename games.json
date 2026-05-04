@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Minecraft",
+    "icon": "games/minecraft/icon.png",
+    "id": "minecraft",
+    "paths": [
+      {
+        "name": "Normal Launch",
+        "path": "games/minecraft/index.html"
+      },
+      {
+        "name": "Backup Version",
+        "path": "games/minecraft/alt.html"
+      }
+    ]
+  },
+  {
+    "name": "Fortnite",
+    "icon": "games/fortnite/icon.png",
+    "id": "fortnite",
+    "paths": [
+      {
+        "name": "Web Build",
+        "path": "games/fortnite/index.html"
+      },
+      {
+        "name": "Legacy Build",
+        "path": "games/fortnite/legacy.html"
+      }
+    ]
+  },
+  {
+    "name": "Roblox",
+    "icon": "games/roblox/icon.png",
+    "id": "roblox",
+    "paths": [
+      {
+        "name": "Main Client",
+        "path": "games/roblox/index.html"
+      },
+      {
+        "name": "Experimental",
+        "path": "games/roblox/test.html"
+      }
+    ]
+  },
+  {
+    "name": "Valorant",
+    "icon": "games/valorant/icon.png",
+    "id": "valorant",
+    "paths": [
+      {
+        "name": "Standard Launch",
+        "path": "games/valorant/index.html"
+      },
+      {
+        "name": "Low Spec Mode",
+        "path": "games/valorant/lowspec.html"
+      }
+    ]
+  }
+]
