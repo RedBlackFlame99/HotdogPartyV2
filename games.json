@@ -1,16 +1,12 @@
 [
   {
-    "name": "Minecraft",
-    "icon": "games/minecraft/icon.png",
-    "id": "minecraft",
+    "name": "Choppy Orc",
+    "icon": "games/choppy-orc/icon.png",
+    "id": "choppy-orc",
     "paths": [
       {
         "name": "Normal Launch",
-        "path": "games/minecraft/index.html"
-      },
-      {
-        "name": "Backup Version",
-        "path": "games/minecraft/alt.html"
+        "path": "games/choppy-orc/index.html"
       }
     ]
   },
